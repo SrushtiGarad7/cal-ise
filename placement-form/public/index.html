@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Data</title>
+    <style>
+        body { font-family: sans-serif; background: #eefff5; display: flex; justify-content: center; padding: 40px; }
+        .card { background: white; padding: 30px; border-radius: 10px; width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2e7d32; }
+        input, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;}
+        button { width: 100%; padding: 12px; background: #2e7d32; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;}
+        button:hover { background: #1b5e20; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🎓 Student Details</h2>
+        <form id="form">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="text" id="prn" placeholder="PRN Number" required>
+            <input type="text" id="classYear" placeholder="Class (TE/BE)" required>
+            <input type="text" id="branch" placeholder="Branch (CSE/IT)" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+            <textarea id="companies" placeholder="Companies Applied (e.g. TCS)"></textarea>
+            <textarea id="reason" placeholder="Reason for Rejection"></textarea>
+            <button type="submit">Submit Data</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.querySelector('button');
+            btn.innerText = "Saving...";
+
+            const data = {
+                name: document.getElementById('name').value,
+                prn: document.getElementById('prn').value,
+                classYear: document.getElementById('classYear').value,
+                branch: document.getElementById('branch').value,
+                email: document.getElementById('email').value,
+                companies: document.getElementById('companies').value,
+                reason: document.getElementById('reason').value
+            };
+
+            const res = await fetch('http://localhost:3000/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                alert("✅ Saved to MongoDB!");
+                window.location.reload();
+            } else {
+                alert("❌ Error saving data");
+                btn.innerText = "Try Again";
+            }
+        });
+    </script>
+</body>
+</html>
